@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchoolManagement.Data;
 using SchoolManagement.Model;
@@ -12,25 +13,31 @@ namespace SchoolManagement.Repo
     {
 
         public readonly SchoolDBContext _context;
+        private readonly IMapper _mapper;
 
-        public SignupRepo(SchoolDBContext context)
+        public SignupRepo(SchoolDBContext context, IMapper mapper)
         {
             _context = context;
-        }
+            _mapper = mapper;
+        } 
 
 
         public async Task<UserDetailsModel> GetUserdetails(int id)
         {
-            var record = await _context.UserDetails.Select(x => new UserDetailsModel()
-            {
-                id =x.id,
-                name = x.name,
-                Role = x.Role,
-                Emailid = x.Emailid,
-                phone =x.phone
-            }
-          ).Where(x => x.id == id).ToListAsync(); 
-            return record;
+            //  var record = await _context.UserDetails.Select(x => new UserDetailsModel()
+            //  {
+            //      id =x.id,
+            //      name = x.name,
+            //      Role = x.Role,
+            //      Emailid = x.Emailid,
+            //      phone =x.phone 
+            //  }
+            //).Where(x => x.id == id).ToListAsync(); 
+            //  return record;
+
+            var record = await _context.UserDetails.FindAsync(id);
+            return _mapper.Map<UserDetailsModel>(record);
+
         }
 
         public async Task<int> AddUser(UserDetailsModel userDetails)

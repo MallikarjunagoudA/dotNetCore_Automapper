@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SchoolManagement.Repo;
+using AutoMapper;
 
 namespace SchoolManagement
 {
@@ -31,11 +32,15 @@ namespace SchoolManagement
         {
             services.AddDbContext<SchoolDBContext>(o => o.UseSqlServer(Configuration.GetConnectionString("SchoolDB")));
             services.AddControllers();
+           
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SchoolManagement", Version = "v1" });
             });
             services.AddTransient<ISignup, SignupRepo>();
+
+            services.AddAutoMapper(typeof(Startup));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
